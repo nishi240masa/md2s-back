@@ -5,8 +5,8 @@ import (
 	"md2s/repositorys"
 )
 
-func GetMember(id uint)(*models.Member,error){
-	result,err:=repositorys.GetMemberById(1)
+func GetMember(id uint)(*models.User,error){
+	result,err:=repositorys.GetMemberById(id)
 	if err!=nil {
 		return nil,err
 	}

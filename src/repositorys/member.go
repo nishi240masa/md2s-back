@@ -2,9 +2,9 @@ package repositorys
 
 import "md2s/models"
 
-func GetMemberById(id uint) (*models.Member, error) {
+func GetMemberById(id uint) (*models.User, error) {
 
-	var  member models.Member
+	var  member models.User
 
 	result := db.Where("id= ? " , id).First(&member)
 
