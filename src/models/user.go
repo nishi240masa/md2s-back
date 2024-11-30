@@ -19,3 +19,4 @@ type like struct {
 	user_id UUID `json:"user_id"`
 	article_id uint `json:"article_id"`
 }
+

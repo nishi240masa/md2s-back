@@ -8,14 +8,20 @@ import (
 
 func Init() {
 	r := gin.Default()
-
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "Hello, World!",
 		})
 	})
 
-	r.GET("/member/:id", controllers.GetMember)
+
+	users := r.Group("/users")
+	r.GET("/user/:id", controllers.GetUser)
+	
+
+	r.POST("/users", controllers.CreateUser)
+
+	r.POST("/imgs", controllers.UploadImg)
 
 	r.Run(":8080")
 }

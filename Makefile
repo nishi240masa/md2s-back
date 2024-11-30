@@ -3,6 +3,9 @@ include .env
 up:
 	docker-compose up -d
 
+down:
+	docker-compose down
+
 go:
 	docker-compose exec -it md2s /bin/sh
 
