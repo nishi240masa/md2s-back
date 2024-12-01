@@ -1,22 +1,19 @@
 package models
-type UUID [16]byte
+
+import (
+	"github.com/google/uuid"
+)
+
+type UUID = uuid.UUID
 
 type User struct {
-	ID   UUID   `gorm:"primary_key auto_increment" json:"id"`
-	Name string `json:"name"`
-	IconURL string `json:"icon_url"`
-	GoogleId string `json:"google_id"`
+	ID        UUID     `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
+	Name      string         `gorm:"type:varchar(100);not null" json:"name"`
+	IconURL   string         `gorm:"type:varchar(255);not null" json:"icon_url"`
+	GoogleId  string         `gorm:"type:varchar(50);unique;not null" json:"google_id"`
 }
 
-type UserCreate struct {
-	Name string `json:"name"`
-	IconURL string `json:"icon_url"`
-	GoogleId string `json:"google_id"`
+type UserSortOptions struct {
+	OrderBy string `json:"order_by"` // "name" or "created_at"
+	Order   string `json:"order"`   // "asc" or "desc"
 }
-
-type like struct {
-	id uint `gorm:"primary_key auto_increment" json:"id"`
-	user_id UUID `json:"user_id"`
-	article_id uint `json:"article_id"`
-}
-

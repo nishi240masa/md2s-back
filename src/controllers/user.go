@@ -1,81 +1,87 @@
 package controllers
 
 import (
+	"errors"
 	"md2s/dto"
-	"md2s/repositorys"
+	"md2s/models"
 	"md2s/services"
 	"net/http"
-	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
+func extractJWTFromHeader(c *gin.Context) (string, error) {
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		return "", errors.New("missing Authorization header")
+	}
 
-func GetUser(c *gin.Context){
+	parts := strings.Split(authHeader, " ")
+	if len(parts) != 2 || parts[0] != "Bearer" {
+		return "", errors.New("invalid Authorization header format")
+	}
 
-	memberId,err := strconv.ParseUint(c.Param("id"),10,64)
+	return parts[1], nil
+}
 
+func GetUsers(c *gin.Context) {
+	var sortOptions models.UserSortOptions
+	if err := c.ShouldBindQuery(&sortOptions); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid sort options"})
+		return
+	}
+
+	if sortOptions.OrderBy == "" {
+		sortOptions.OrderBy = "created_at"
+	}
+	if sortOptions.Order == "" {
+		sortOptions.Order = "desc"
+	}
+
+	users, err := services.GetUsers(sortOptions)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-		
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	result,err:=repositorys.GetUserById(uint(memberId))
-	if err!=nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-	}
-
-	c.JSON(http.StatusOK, result)
+	c.JSON(http.StatusOK, users)
 }
 
-
-
-func CreateUser(c *gin.Context){
-	var user dto.CreateUserData
-
-	if error := c.ShouldBindJSON(&user); error != nil{
-		c.JSON(http.StatusBadRequest,gin.H{"error":error.Error()})
-		return
-		
-	}
-
-	newUser,err:= services.CreateUser(user)
-
-
-	if err != nil{
-
-		if err.Error() == "ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)"{
-			c.JSON(http.StatusBadRequest,gin.H{"error":"既に登録されているGoogleIDです"})
-			return
-		}
-		c.JSON(http.StatusInternalServerError,gin.H{"error":err.Error()})
-		return
-		
-	}
-	c.JSON(http.StatusCreated,newUser)
-}
-
-func DeleteUser(c *gin.Context){
-
-	userId := c.Param("id")
-
+func GetUserFromJWT(c *gin.Context) {
+	jwtToken, err := extractJWTFromHeader(c)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-		
-	}
-
-	err = services.DeleteUser(uint(memberId))
-	if err != nil{
-		c.JSON(http.StatusInternalServerError,gin.H{"error":err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusNoContent,nil)
+	user, err := services.GetUserByJWT(jwtToken)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }
 
+func CreateUser(c *gin.Context) {
+	jwtToken, err := extractJWTFromHeader(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var input dto.CreateUserData
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := services.CreateUser(jwtToken, input)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}

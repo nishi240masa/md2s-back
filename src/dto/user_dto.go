@@ -6,3 +6,9 @@ type CreateUserData struct {
 	GoogleId string `json:"google_id"`
 
 }
+
+type GoogleLoginData struct {
+	Jwt string `json:"jwt"`
+}
+
+
