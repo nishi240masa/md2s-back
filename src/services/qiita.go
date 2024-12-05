@@ -10,7 +10,7 @@ import (
 func AlignmentQiita(jwtToken string, input dto.AlignmentQiita) (*models.User, error) {
 
 	// JWTトークンからユーザー情報を取得
-    claims, err := verifyGoogleToken(jwtToken)
+    claims, err := VerifyGoogleToken(jwtToken)
     if err != nil {
         return nil, err
     }

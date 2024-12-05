@@ -27,3 +27,21 @@ func GetArticle(id int) (*models.Article, error) {
 	}
 	return &article, nil
 }
+
+func CreateArticle(newArticle *models.Article) (int, error) {
+	
+	result := db.Create(newArticle)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+
+	return newArticle.ID, nil
+}
+
+func UpdateArticle(article *models.Article) error {
+	result := db.Save(article)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}

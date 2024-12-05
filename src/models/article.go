@@ -1,15 +1,19 @@
 package models
 
+import "time"
+
+
+
 type Article struct {
-	ID          int    `json:"id"`
-	UserId     int    `json:"user_id"`
-	Title	   string `json:"title"`
-	MainMD	   string `json:"main_md"`
-	SlideMd	   string `json:"slide_md"`
-	Created_at string `json:"created_at"`
-	Updated_at string `json:"updated_at"`
-	Like_count int    `json:"like_count"`
-	Public bool   `json:"published"`
-	QiitaId string `json:"qiita_id"`
+    ID          int       `gorm:"primary_key" json:"id"`
+    UserId      UUID    `db:"user_id"`
+    Title       string    `db:"title"`
+    MainMD      string    `db:"main_md"`
+    SlideMD     *string   `db:"slide_md"`
+    CreatedAt   time.Time `db:"created_at"`
+    UpdatedAt   time.Time `db:"updated_at"`
+    LikeCount   int       `db:"like_count"`
+    Public      bool      `db:"public"`
+    QiitaArticle bool     `db:"qiita_article"`
 }
 

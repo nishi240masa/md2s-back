@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- 記事テーブル
-CREATE TABLE IF NOT EXISTS article (
+CREATE TABLE IF NOT EXISTS articles (
     id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(50) NOT NULL,
@@ -32,16 +32,16 @@ $$ LANGUAGE plpgsql;
 
 -- トリガーを作成
 CREATE TRIGGER set_updated_at
-BEFORE UPDATE ON article
+BEFORE UPDATE ON articles
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at();
 
 
 -- 記事の「いいね」テーブル
-CREATE TABLE IF NOT EXISTS article_like (
+CREATE TABLE IF NOT EXISTS articleLike (
     id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    article_id INT NOT NULL REFERENCES article(id) ON DELETE CASCADE
+    article_id INT NOT NULL REFERENCES articles(id) ON DELETE CASCADE
 );
 
 -- タグテーブル
@@ -51,9 +51,9 @@ CREATE TABLE IF NOT EXISTS tags (
 );
 
 -- 記事タグ関連テーブル
-CREATE TABLE IF NOT EXISTS article_tag_relation (
+CREATE TABLE IF NOT EXISTS articleTagRelations (
     id SERIAL PRIMARY KEY,
-    article_id INT NOT NULL REFERENCES article(id) ON DELETE CASCADE,
+    article_id INT NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
     tag_id INT NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
     UNIQUE (article_id, tag_id) -- 同じタグが同じ記事に複数回設定されないようにする
 );

@@ -38,23 +38,31 @@ func Init() {
 	})
 
 
+	// ユーザー
 	users := r.Group("/users")
 	users.GET("/:id", controllers.GetUsers)
 	users.POST("", controllers.CreateUser)
 	users.OPTIONS("", controllers.CreateUser)
 	// users.DELETE("/:id", controllers.DeleteUser)
 
+	// 画像
 	imgs := r.Group("/imgs")
 	imgs.POST("/imgs", controllers.UploadImg)
 
 
+	// Qiita
 	qiita := r.Group("/qiita")
 	qiita.POST("", controllers.AlignmentQiita)
 
+	// 記事
 	articles := r.Group("/articles")
 	articles.GET("", controllers.GetArticles)
 	articles.GET("/:id", controllers.GetArticle)
 
+	articles.POST("", controllers.CreateArticle)
+	articles.PUT("/:id", controllers.UpdateArticle)
+
+	// タグ
 	tags := r.Group("/tags")
 	tags.GET("", controllers.GetTags)
 	tags.GET("/:id", controllers.GetTag)

@@ -13,7 +13,7 @@ func GetUsers( sortOptions models.UserSortOptions) ([]models.User, error) {
 }
 
 func GetUserByJWT( jwtToken string) (*models.User, error) {
-	claims, err := verifyGoogleToken(jwtToken)
+	claims, err := VerifyGoogleToken(jwtToken)
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func GetUserByJWT( jwtToken string) (*models.User, error) {
 }
 
 func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error) {
-    claims, err := verifyGoogleToken(jwtToken)
+    claims, err := VerifyGoogleToken(jwtToken)
     if err != nil {
         return nil, err
     }

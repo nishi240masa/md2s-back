@@ -81,7 +81,7 @@ func fetchGoogleCerts() (models.GoogleCerts, error) {
 }
 
 
-func verifyGoogleToken(idToken string) (*models.GoogleIDToken, error) {
+func VerifyGoogleToken(idToken string) (*models.GoogleIDToken, error) {
     certs, err := fetchGoogleCerts()
     if err != nil {
         return nil, err
