@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"md2s/controllers"
 	"time"
 
@@ -22,9 +23,18 @@ func Init() {
 
 
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Hello, World!",
-		})
+
+		// クエリパラメータを取得
+		code := c.Query("code")
+
+		fmt.Println(code)
+
+		// リダイレクト先のURLを生成
+		redirectURL := "https://md2s-test-aa.vercel.app/"
+
+		// リダイレクト
+		c.Redirect(302, redirectURL)
+
 	})
 
 
@@ -37,7 +47,18 @@ func Init() {
 	imgs := r.Group("/imgs")
 	imgs.POST("/imgs", controllers.UploadImg)
 
-	// r.POST("/google", controllers.GoogleLogin)
+
+	qiita := r.Group("/qiita")
+	qiita.POST("", controllers.AlignmentQiita)
+
+	articles := r.Group("/articles")
+	articles.GET("", controllers.GetArticles)
+	articles.GET("/:id", controllers.GetArticle)
+
+	tags := r.Group("/tags")
+	tags.GET("", controllers.GetTags)
+
+	tags.POST("", controllers.CreateTag)
 
 	r.Run(":8080")
 }

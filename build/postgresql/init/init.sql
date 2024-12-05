@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS users (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     icon_url VARCHAR(255),
-    google_id VARCHAR(50) UNIQUE
+    google_id VARCHAR(50) UNIQUE,
+    qiita_id VARCHAR(50) UNIQUE
 );
 
 -- 記事テーブル

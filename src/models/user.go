@@ -11,6 +11,7 @@ type User struct {
 	Name      string         `gorm:"type:varchar(100);not null" json:"name"`
 	IconURL   string         `gorm:"type:varchar(255);not null" json:"icon_url"`
 	GoogleId  string         `gorm:"type:varchar(50);unique;not null" json:"google_id"`
+	QiitaId   string         `gorm:"type:varchar(50);unique" json:"qiita_id"`
 }
 
 type UserSortOptions struct {
