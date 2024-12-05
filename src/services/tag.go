@@ -6,8 +6,12 @@ import (
 	"md2s/repositorys"
 )
 
-func GetTags() ([]string, error) {
+func GetTags() ([]models.Tag, error) {
 	return repositorys.GetTags()
+}
+
+func GetTag(id int) (*models.Tag, error) {
+	return repositorys.GetTag(id)
 }
 
 func CreateTag(input dto.CreateTagData) error {
@@ -17,4 +21,20 @@ func CreateTag(input dto.CreateTagData) error {
 	}
 
 	return repositorys.CreateTag(&newTag)
+}
+
+func UpdateTag(id int, input dto.CreateTagData) error {
+	
+	tag, err := repositorys.GetTag(id)
+	if err != nil {
+		return err
+	}
+
+	tag.Word = input.Word
+
+	return repositorys.UpdateTag(tag)
+}
+
+func DeleteTag(id int) error {
+		return repositorys.DeleteTag(id)
 }

@@ -3,13 +3,24 @@ package repositorys
 import "md2s/models"
 
 
-func GetTags() ([]string, error) {
-	var tags []string
-	result := db.Table("tags").Pluck("name", &tags)
+func GetTags() ([]models.Tag, error) {
+
+	// 全部のデータを取得
+	var tags []models.Tag
+	result := db.Find(&tags)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return tags, nil
+}
+
+func GetTag(id int) (*models.Tag, error) {
+	var tag models.Tag
+	result := db.Where("id = ?", id).First(&tag)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &tag, nil
 }
 
 
@@ -22,3 +33,21 @@ func CreateTag(newTag *models.Tag) error {
 	return nil
 
 }
+
+func UpdateTag(newTag *models.Tag) error {
+	
+	result := db.Save(newTag)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func DeleteTag(id int) error {
+	result := db.Where("id = ?", id).Delete(&models.Tag{})
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+

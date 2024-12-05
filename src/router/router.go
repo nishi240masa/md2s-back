@@ -57,8 +57,11 @@ func Init() {
 
 	tags := r.Group("/tags")
 	tags.GET("", controllers.GetTags)
-
+	tags.GET("/:id", controllers.GetTag)
 	tags.POST("", controllers.CreateTag)
+	tags.PUT("/:id", controllers.UpdateTag)
+	tags.DELETE("/:id", controllers.DeleteTag)
+
 
 	r.Run(":8080")
 }
