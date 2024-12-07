@@ -42,8 +42,19 @@ func GetQiitaAccessToken(code string) (string, error) {
 
 	token, ok := result["token"].(string)
 	if !ok {
-		return "", fmt.Errorf("Error: token not found in response")
+		return "", fmt.Errorf("error: token not found in response")
 	}
 
 	return token, nil
+}
+
+func GetQiitaArticles(token string) (*http.Request, error) {
+	api := "https://qiita.com/api/v2/authenticated_user/items"
+
+	req, err := http.NewRequest("GET", api, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }

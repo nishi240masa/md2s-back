@@ -49,6 +49,7 @@ func Init() {
 	// Qiita
 	qiita := r.Group("/qiita")
 	qiita.POST("", controllers.AlignmentQiita)
+	qiita.GET("", controllers.GetQiitaArticles)
 
 	// 記事
 	articles := r.Group("/articles")

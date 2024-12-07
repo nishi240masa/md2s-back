@@ -32,3 +32,22 @@ func AlignmentQiita(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 
 }
+
+func GetQiitaArticles(c *gin.Context) {
+	
+	jwtToken, err := extractJWTFromHeader(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	articles, err := services.GetQiitaArticles(jwtToken)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, articles)
+
+}

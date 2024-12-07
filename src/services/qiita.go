@@ -1,10 +1,12 @@
 package services
 
 import (
+	"errors"
 	"md2s/dto"
 	"md2s/models"
 	"md2s/repositorys"
 	"md2s/utils/qitta"
+	"net/http"
 )
 
 func AlignmentQiita(jwtToken string, input dto.AlignmentQiita) (*models.User, error) {
@@ -22,7 +24,6 @@ func AlignmentQiita(jwtToken string, input dto.AlignmentQiita) (*models.User, er
 	if err != nil {
 		return nil, err
 	}
-
 
 	// Qiitaのアクセストークンを取得
 		token, err := qitta.GetQiitaAccessToken(input.QitaCode) // 正しいフィールド名を使用
@@ -42,4 +43,36 @@ func AlignmentQiita(jwtToken string, input dto.AlignmentQiita) (*models.User, er
 
 
 
+}
+
+func GetQiitaArticles(jwtToken string) (*http.Request, error) {
+	// JWTトークンからユーザー情報を取得
+	claims, err := VerifyGoogleToken(jwtToken)
+	if err != nil {
+		return nil, err
+	}
+
+	userId := claims.Sub
+
+	// ユーザー情報を取得
+	user, err := repositorys.GetUserByGoogleID(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.QiitaId != "" {
+		return nil, errors.New("not qiita_id")
+	}
+
+
+	// Qiitaのアクセストークンを取得
+	token := user.QiitaId
+
+	// Qiitaの記事を取得
+	articles, err := qitta.GetQiitaArticles(token)
+	if err != nil {
+		return nil, err
+	}
+
+	return articles, nil
 }
