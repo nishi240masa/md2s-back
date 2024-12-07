@@ -12,7 +12,6 @@ services:
       - "${PORT:-8080}:${PORT:-8080}" # 環境変数 PORT を使用し、デフォルトは 4000 に設定
     environment:
       - PORT=${PORT:-8080} # コンテナ内の環境変数として設定
-
     tty: true # コンテナの永続化
     env_file: # .envファイル
       - .env
