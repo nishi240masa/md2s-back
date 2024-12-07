@@ -323,5 +323,8 @@ func SlideConverter(content []byte) (marp string, err error) {
 	// 文字列変換の例（全て大文字に変換）
 	marp, err = MD2S(decoded)
 
+	//base64に変換
+	marp = base64.StdEncoding.EncodeToString([]byte(marp))
+
 	return marp, err
 }
