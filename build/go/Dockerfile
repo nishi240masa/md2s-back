@@ -16,5 +16,8 @@ RUN go mod download
 # Airをインストール (公式スクリプトを使用)
 RUN go install github.com/air-verse/air@latest
 
+ENV PORT 8080
+
+
 # Air設定ファイルに従ってアプリを起動
 CMD ["air", "-c", ".air.toml"]
