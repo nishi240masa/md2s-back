@@ -52,6 +52,7 @@ func SetupDB() *gorm.DB {
 			qiita_article BOOLEAN DEFAULT FALSE
 		);
 
+
 		-- トリガー用の関数を作成
 		CREATE OR REPLACE FUNCTION update_updated_at()
 		RETURNS TRIGGER AS $$
@@ -60,12 +61,17 @@ func SetupDB() *gorm.DB {
 			RETURN NEW;
 		END;
 		$$ LANGUAGE plpgsql;
-
-		-- トリガーを作成
-		CREATE TRIGGER set_updated_at
-		BEFORE UPDATE ON articles
-		FOR EACH ROW
-		EXECUTE FUNCTION update_updated_at();
+		
+		-- トリガーが既に存在していない場合のみ作成する
+		DO $$
+		BEGIN
+			IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'set_updated_at') THEN
+				CREATE TRIGGER set_updated_at
+				BEFORE UPDATE ON articles
+				FOR EACH ROW
+				EXECUTE FUNCTION update_updated_at();
+			END IF;
+		END $$;
 
 		-- 記事の「いいね」テーブル
 		CREATE TABLE IF NOT EXISTS articleLikes (
