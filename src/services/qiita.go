@@ -60,8 +60,8 @@ func GetQiitaArticles(jwtToken string) (*http.Request, error) {
 		return nil, err
 	}
 
-	if user.QiitaId != "" {
-		return nil, errors.New("not qiita_id")
+	if user.QiitaId == user.GoogleId {
+		return nil, errors.New("Qiitaアカウントが連携されていません")
 	}
 
 

@@ -9,7 +9,7 @@ import (
 )
 
 func GetUsers( sortOptions models.UserSortOptions) ([]models.User, error) {
-	return repositorys.GetUsers( sortOptions)
+	return repositorys.GetUsers(sortOptions)
 }
 
 func GetUserByJWT( jwtToken string) (*models.GetUser, error) {
@@ -24,7 +24,9 @@ func GetUserByJWT( jwtToken string) (*models.GetUser, error) {
 	}
 
 	var resUser models.GetUser
-	if res.QiitaId != "" {
+	if res.QiitaId == res.GoogleId {
+		resUser.Qiita_link = false
+	} else {
 		resUser.Qiita_link = true
 	}
 
@@ -51,6 +53,7 @@ func GetUserByJWT( jwtToken string) (*models.GetUser, error) {
 	resUser.ID = res.ID
 	resUser.Name = res.Name
 	resUser.IconURL = res.IconURL
+
 
 	return &resUser, nil
 }
@@ -84,7 +87,8 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 		Name:     input.Name,
 		IconURL:  input.IconURL,
 		GoogleId: input.GoogleId,
-		QiitaId: "",
+		QiitaId:  input.GoogleId,
+		Qiita_link: false,
 	}
 
     err = repositorys.CreateUser(newUser)

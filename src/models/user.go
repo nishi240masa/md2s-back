@@ -17,6 +17,7 @@ type User struct {
 	IconURL   string         `gorm:"type:varchar(255);not null" json:"icon_url"`
 	GoogleId  string         `gorm:"type:varchar(50);unique;not null" json:"google_id"`
 	QiitaId   string         `gorm:"type:varchar(50);unique" json:"qiita_id"`
+	Qiita_link bool `gorm:"type:boolean;not null" json:"qiita_link"`
 }
 
 type GetUser struct {
