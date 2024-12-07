@@ -18,8 +18,12 @@ func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
     Limit(query.Limit).
     Offset(query.Offset).
     Find(&articles)
-	
 
+
+	// ０件の場合
+	if result.Error  == nil && len(articles) == 0 {
+		return articles, nil
+	}
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -35,6 +39,8 @@ func GetArticle(id int) (*models.Article, error) {
 	Joins("JOIN users ON users.id = articles.user_id").
 	Select("articles.*, users.icon_url, users.name").
 	Where("articles.id = ?", id).First(&article)
+
+
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -47,6 +53,13 @@ func GetArticlesByUserId(user_id models.UUID) ([]models.Article, error) {
 	Select("articles.*, users.icon_url, users.name").
 	Where("user_id = ?", user_id).
 	Find(&articles)
+
+
+		// ０件の場合
+		if result.Error  == nil && len(articles) == 0 {
+			return articles, nil
+		}
+
 	if result.Error != nil {
 		return nil, result.Error
 	}
