@@ -35,7 +35,9 @@ func SetupDB() *gorm.DB {
 			name VARCHAR(50) NOT NULL,
 			icon_url VARCHAR(255),
 			google_id VARCHAR(50) UNIQUE,
-			qiita_id VARCHAR(50) UNIQUE
+			qiita_id VARCHAR(50) UNIQUE,
+			Qiita_link BOOLEAN DEFAULT FALSE
+
 		);
 
 		-- 記事テーブル
