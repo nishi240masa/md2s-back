@@ -16,7 +16,7 @@ func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
     Joins("LEFT JOIN articleTagRelations ON articleTagRelations.article_id = articles.id").
     Joins("LEFT JOIN tags ON tags.id = articleTagRelations.tag_id").
     Joins("JOIN users ON users.id = articles.user_id").
-    Select("articles.*, COALESCE(tags.word, '') AS tag, users.name AS user_name, users.icon_url AS user_icon").
+	Select("articles.*, users.icon_url, users.name,tags.*").
     Limit(query.Limit).
     Offset(query.Offset).
     Find(&articles)
@@ -55,8 +55,11 @@ func SearchArticles(input dto.SearchArticlesData) ([]models.Article, error) {
 	result := db.
     Joins("JOIN articleTagRelations ON articleTagRelations.article_id = articles.id").
     Joins("JOIN tags ON tags.id = articleTagRelations.tag_id").
+	Joins("JOIN users ON users.id = articles.user_id").
+	Select("articles.*, users.icon, users.name").
     Where("articles.title LIKE ? OR tags.word LIKE ?", "%"+input.Keyword+"%", "%"+input.Keyword+"%").
     Find(&articles)
+
 
 	if result.Error != nil {
 		return nil, result.Error

@@ -18,7 +18,7 @@ func GetUserByJWT( jwtToken string) (*models.User, error) {
 		return nil, err
 	}
 
-	return repositorys.GetUserByGoogleID( claims.Email) // Google IDとしてEmailを利用
+	return repositorys.GetUserByGoogleID( claims.Sub) // Google IDとしてEmailを利用
 }
 
 func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error) {
