@@ -79,10 +79,12 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 
 	
 
+
     newUser := &models.User{
         Name:     input.Name,
         IconURL:  input.IconURL,
         GoogleId: input.GoogleId,
+		QiitaId: "",
     }
 
     err = repositorys.CreateUser(newUser)
