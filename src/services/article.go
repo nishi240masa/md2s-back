@@ -24,7 +24,7 @@ func CreateArticle(input dto.CreateArticleData,googleId string) error {
 		return err
 	}
 	
-	newArticle := models.Article{
+	newArticle := models.CreateArticle{
 		UserId: user.ID,
 		Title: input.Title,
 		MainMD: input.MainMD,
@@ -85,7 +85,7 @@ func UpdateArticle(id int, input dto.CreateArticleData,googleId string ) error {
 	}
 
 	// 記事の更新
-	newArticle := models.Article{
+	newArticle := models.CreateArticle{
 		ID: id,
 		UserId: user.ID,
 		Title: input.Title,

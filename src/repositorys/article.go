@@ -28,7 +28,7 @@ func GetArticle(id int) (*models.Article, error) {
 	return &article, nil
 }
 
-func CreateArticle(newArticle *models.Article) (int, error) {
+func CreateArticle(newArticle *models.CreateArticle) (int, error) {
 	
 	result := db.Create(newArticle)
 	if result.Error != nil {
@@ -38,7 +38,7 @@ func CreateArticle(newArticle *models.Article) (int, error) {
 	return newArticle.ID, nil
 }
 
-func UpdateArticle(article *models.Article) error {
+func UpdateArticle(article *models.CreateArticle) error {
 	result := db.Save(article)
 	if result.Error != nil {
 		return result.Error
