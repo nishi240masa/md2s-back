@@ -40,6 +40,7 @@ func CreateTag(newTag *models.Tag) error {
 	if result.Error != nil {
 		return result.Error
 	}
+
 	return nil
 
 }
