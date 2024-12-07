@@ -13,7 +13,7 @@ import (
 func Init() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "4000" // デフォルトのポート
+		port = "8080" // デフォルトのポート
 	}
 
 
