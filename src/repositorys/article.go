@@ -53,7 +53,7 @@ func GetArticlesByUserId(user_id models.UUID) ([]models.Article, error) {
 	return articles, nil
 }
 
-func CreateArticle(newArticle *models.CreateArticle) (int, error) {
+func CreateArticle(newArticle *models.Articles) (int, error) {
 	
 	result := db.Create(newArticle)
 	if result.Error != nil {

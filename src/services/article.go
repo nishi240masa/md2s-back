@@ -109,8 +109,9 @@ func CreateArticle(input dto.CreateArticleData,googleId string) error {
 		return err
 	}
 	
-	newArticle := models.CreateArticle{
+	newArticle := models.Articles{
 		UserId: user.ID,
+		IconURL: user.IconURL,
 		Title: input.Title,
 		MainMD: input.MainMD,
 		SlideMD: &input.SlideMD,
