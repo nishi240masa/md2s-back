@@ -15,7 +15,7 @@ type Article struct {
     LikeCount   int       `db:"like_count" gorm:"column:like_count" json:"like_count"`
     Public      bool      `db:"public" gorm:"column:public" json:"public"`
     QiitaArticle bool     `db:"qiita_article" gorm:"column:qiita_article" json:"qiita_article"`
-	Tags		[]Tag     `gorm:"many2many:articletagrelations;"` 
+	Tags		[]Tag     `gorm:"many2many:articletagrelations; json:"tags"` 
 
 }
 
