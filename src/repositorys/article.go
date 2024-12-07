@@ -13,13 +13,10 @@ func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
 
 	// 記事のuser_idからユーザーiconとnameも取得
 	result := db.
-    Joins("LEFT JOIN articleTagRelations ON articleTagRelations.article_id = articles.id").
-    Joins("LEFT JOIN tags ON tags.id = articleTagRelations.tag_id").
     Joins("JOIN users ON users.id = articles.user_id").
-	Select("articles.*, users.icon_url, users.name,tags.*").
+	Select("articles.*, users.icon_url, users.name").
     Limit(query.Limit).
     Offset(query.Offset).
-    Preload("Tags"). // タグをプリロード
     Find(&articles)
 	
 
@@ -66,11 +63,9 @@ func SearchArticles(input dto.SearchArticlesData) ([]models.Article, error) {
     Joins("JOIN articleTagRelations ON articleTagRelations.article_id = articles.id").
     Joins("JOIN tags ON tags.id = articleTagRelations.tag_id").
     Joins("JOIN users ON users.id = articles.user_id").
-	Select("articles.*, users.icon_url, users.name, tags.*").
+    Select("DISTINCT articles.*, users.icon_url AS icon_url, users.name AS user_name").
     Where("articles.title LIKE ? OR tags.word LIKE ?", "%"+input.Keyword+"%", "%"+input.Keyword+"%").
-    Preload("Tags"). // タグをプリロード
     Find(&articles)
-
 
 	if result.Error != nil {
 		return nil, result.Error

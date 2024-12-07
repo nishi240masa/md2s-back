@@ -16,6 +16,28 @@ func GetArticles( quary dto.GetArticlesData) ([]models.Article, error) {
 		return nil, err
 	}
 
+	// 記事IDからタグIDを取得
+	for i, article := range articles {
+	tags, err := repositorys.GetArticleTagByArticleID(article.ID)
+	if err != nil {
+		return nil, err
+	}
+
+
+	var articleTags []models.Tag
+	// タグIDからタグ情報を取得
+	for _, tagRelation := range tags {
+		tag, err := repositorys.GetTag(tagRelation.TagId)
+		if err != nil {
+			return nil, err
+		}
+		articleTags = append(articleTags, *tag)
+	}
+	article.Tags = articleTags
+	articles[i] = article
+	}
+
+
 	return articles, nil
 }
 
@@ -107,6 +129,26 @@ func SearchArticles(input dto.SearchArticlesData) ([]models.Article, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	for i, article := range articles {
+		tags, err := repositorys.GetArticleTagByArticleID(article.ID)
+		if err != nil {
+			return nil, err
+		}
+	
+	
+		var articleTags []models.Tag
+		// タグIDからタグ情報を取得
+		for _, tagRelation := range tags {
+			tag, err := repositorys.GetTag(tagRelation.TagId)
+			if err != nil {
+				return nil, err
+			}
+			articleTags = append(articleTags, *tag)
+		}
+		article.Tags = articleTags
+		articles[i] = article
+		}
 
 	return articles, nil
 
