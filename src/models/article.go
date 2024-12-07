@@ -31,7 +31,9 @@ import "time"
 
 type Article struct {
     ID          int       `gorm:"primary_key" json:"id"`
-    UserId      UUID    `db:"user_id"`
+    UserId      UUID    `db:"create_user_id"`
+	UserName    string    `db:"user_name"`
+	UserIcon    string    `db:"icon_url"`
     Title       string    `db:"title"`
     MainMD      string    `db:"main_md"`
     SlideMD     *string   `db:"slide_md"`
@@ -40,7 +42,7 @@ type Article struct {
     LikeCount   int       `db:"like_count"`
     Public      bool      `db:"public"`
     QiitaArticle bool     `db:"qiita_article"`
-	Tags		[]Tag     `gorm:"many2many:articletagrelations;"` 
+	Tags		[]Tag     `json:"tags"`
 
 }
 

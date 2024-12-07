@@ -6,11 +6,22 @@ import (
 )
 
 
-func GetArticles(quary dto.GetArticlesData) ([]models.Article, error) {
+func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
 	// 記事情報を取得
 	var articles []models.Article
 
-	result := db.Limit(quary.Limit).Offset(quary.Offset).Find(&articles)
+
+	// 記事のuser_idからユーザーiconとnameも取得
+	result := db.
+    Joins("LEFT JOIN articleTagRelations ON articleTagRelations.article_id = articles.id").
+    Joins("LEFT JOIN tags ON tags.id = articleTagRelations.tag_id").
+    Joins("JOIN users ON users.id = articles.user_id").
+    Select("articles.*, COALESCE(tags.word, '') AS tag, users.name AS user_name, users.icon_url AS user_icon").
+    Limit(query.Limit).
+    Offset(query.Offset).
+    Find(&articles)
+	
+
 
 	if result.Error != nil {
 		return nil, result.Error

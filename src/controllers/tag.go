@@ -37,15 +37,14 @@ func CreateTag(c *gin.Context) {
 		return
 	}
 
-	tag := services.CreateTag(input)
+	tag,err := services.CreateTag(input)
 
-	if tag != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": tag.Error()})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	
-
-	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	c.JSON(http.StatusOK, tag)
 }
 
 func UpdateTag(c *gin.Context) {

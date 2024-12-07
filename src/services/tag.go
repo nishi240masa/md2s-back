@@ -14,7 +14,7 @@ func GetTag(id int) (*models.Tag, error) {
 	return repositorys.GetTag(id)
 }
 
-func CreateTag(input []dto.CreateTagData) error {
+func CreateTag(input []dto.CreateTagData)  (*models.Tag, error) {
 	var newTag models.Tag
 	for _, tag := range input {
 
@@ -24,11 +24,11 @@ func CreateTag(input []dto.CreateTagData) error {
 
 		err := repositorys.CreateTag(&newTag)
 		if err != nil {
-		return err
+		return nil ,err
 		}
 	}
 
-	return nil
+	return &newTag, nil
 }
 
 func UpdateTag(id int, input dto.CreateTagData) error {
