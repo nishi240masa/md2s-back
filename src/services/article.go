@@ -111,7 +111,6 @@ func CreateArticle(input dto.CreateArticleData,googleId string) error {
 	
 	newArticle := models.Articles{
 		UserId: user.ID,
-		IconURL: user.IconURL,
 		Title: input.Title,
 		MainMD: input.MainMD,
 		SlideMD: &input.SlideMD,

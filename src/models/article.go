@@ -35,7 +35,6 @@ type CreateArticle struct {
 type Articles struct {
 	ID          int       `gorm:"primary_key" json:"id"`
     UserId      UUID    `db:"user_id" gorm:"column:user_id" json:"user_id"`
-	IconURL string    `db:"icon_url" json:"icon_url"`
     Title       string    `db:"title" gorm:"column:title" json:"title"`
     MainMD      string    `db:"main_md" gorm:"column:main_md" json:"main_md"`
     SlideMD     *string   `db:"slide_md" gorm:"column:slide_md" json:"slide_md"`
