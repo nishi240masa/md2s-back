@@ -16,7 +16,6 @@ import (
 	"time"
 
 	"github.com/google/generative-ai-go/genai"
-	"github.com/joho/godotenv"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
@@ -196,11 +195,6 @@ func parseMarkdown(content []byte) ([]*Slide, error) {
 func AnalyzeContentWithGemini(slides []*Slide) ([]*Slide, error) {
 	ctx := context.Background()
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("[ERROR] Error loading .env file")
-	}
-
 	// Gemini APIクライアントを作成する
 	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
 	if err != nil {
@@ -320,9 +314,7 @@ func MD2S(content []byte) (marpContent string, err error) {
 
 func SlideConverter(input dto.RequestBody) (marp string, err error) {
 
-
 	content := []byte(input.Md)
-
 
 	decoded := DeleteEscape(content)
 
