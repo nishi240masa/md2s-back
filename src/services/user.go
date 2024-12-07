@@ -75,8 +75,27 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 	}
 
 	// 既に登録されているか確認
-	_, err = repositorys.GetUserByGoogleID(input.GoogleId)
+
+	var user *models.User
+	user, err = repositorys.GetUserByGoogleID(input.GoogleId)
 	if err == nil {
+
+		if user.QiitaId == user.GoogleId {
+			user.Qiita_link = false
+		} else {
+			user.Qiita_link = true
+		}
+
+		// update
+		user.Name = input.Name
+		user.IconURL = input.IconURL
+		err = repositorys.UpdateUser(user)
+		if err != nil {
+			return nil, err
+		}
+
+
+
 		return nil, errors.New("user already exists")
 	} 
 

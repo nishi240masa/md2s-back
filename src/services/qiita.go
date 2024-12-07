@@ -32,6 +32,7 @@ func AlignmentQiita(jwtToken string, input dto.AlignmentQiita) (*models.User, er
 		}
 
 	user.QiitaId = token
+	user.Qiita_link = true
 
 	// ユーザー情報を更新
 	err = repositorys.AlignmentQiita(user)

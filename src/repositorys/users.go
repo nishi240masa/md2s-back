@@ -40,3 +40,11 @@ func CreateUser(newUser *models.User) error {
 	}
 	return nil
 }
+
+func UpdateUser(user *models.User) error {
+	result := db.Save(user)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
