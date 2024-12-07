@@ -39,6 +39,20 @@ func CreateArticle(newArticle *models.CreateArticle) (int, error) {
 	return newArticle.ID, nil
 }
 
+func SearchArticles(input dto.SearchArticlesData) ([]models.Article, error) {
+	var articles []models.Article
+	result := db.
+    Joins("JOIN articleTagRelations ON articleTagRelations.article_id = articles.id").
+    Joins("JOIN tags ON tags.id = articleTagRelations.tag_id").
+    Where("articles.title LIKE ? OR tags.word LIKE ?", "%"+input.Keyword+"%", "%"+input.Keyword+"%").
+    Find(&articles)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return articles, nil
+}
+
 func UpdateArticle(article *models.CreateArticle) error {
 	result := db.Save(article)
 	if result.Error != nil {

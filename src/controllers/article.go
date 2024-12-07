@@ -89,6 +89,42 @@ func CreateArticle(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }
 
+// kyeword search
+func SearchArticles(c *gin.Context) {
+	
+	keyword := c.Query("keyword")
+
+	limit,err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
+
+		limit = 10
+		
+	}
+	offset,err := strconv.Atoi(c.Query("offset"))
+	if err != nil {
+
+		offset = 0
+
+	}
+
+	input := dto.SearchArticlesData{
+		Keyword: keyword,
+		Limit: limit,
+		Offset: offset,
+	}
+
+
+	articles, err := services.SearchArticles(input)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, articles)
+
+}
+
 
 // update
 

@@ -58,6 +58,7 @@ func Init() {
 	articles := r.Group("/articles")
 	articles.GET("", controllers.GetArticles)
 	articles.GET("/:id", controllers.GetArticle)
+	articles.GET("/search", controllers.SearchArticles)
 
 	articles.POST("", controllers.CreateArticle)
 	articles.PUT("/:id", controllers.UpdateArticle)

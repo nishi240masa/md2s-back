@@ -19,21 +19,8 @@ type CreateArticleData struct {
 
 }
 
-// [
-//   "create_user_id":"387a4e2d-5b8d-4d-9035-ee95680b66b4",
-//   "title": "title1",
-//   "main_MD":"本文のMarkdown",
-//   "slide_MD":"スライドのMarkdown",
-//   "public": true
-//   "qiita_article": false,
-//   "tags": [
-//     {
-//       "id": "1",
-//       "name": "tag1"
-//     },
-//     {
-//       "id": "2",
-//       "name": "tag2"
-//     }
-//   ]
-// ]
+type SearchArticlesData struct {
+	Keyword string `json:"keyword"`
+	Limit   int    `json:"limit"`
+	Offset  int    `json:"offset"`
+}

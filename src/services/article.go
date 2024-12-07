@@ -108,6 +108,18 @@ func CreateArticle(input dto.CreateArticleData,googleId string) error {
 	return nil
 }
 
+func SearchArticles(input dto.SearchArticlesData) ([]models.Article, error) {
+
+	// keywordを含む記事情報を取得
+	articles, err := repositorys.SearchArticles(input)
+	if err != nil {
+		return nil, err
+	}
+
+	return articles, nil
+
+}
+
 func UpdateArticle(id int, input dto.CreateArticleData,googleId string ) error {
 
 	// ユーザー情報を取得

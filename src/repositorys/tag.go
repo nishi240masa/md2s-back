@@ -24,6 +24,15 @@ func GetTag(id int) (*models.Tag, error) {
 	return &tag, nil
 }
 
+func SearchTags (keyword string) ([]models.Tag, error) {
+	var tags []models.Tag
+	result := db.Where("word LIKE ?", "%" + keyword + "%").Find(&tags)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return tags, nil
+}
+
 
 func CreateTag(newTag *models.Tag) error {
 
