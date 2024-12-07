@@ -1,8 +1,11 @@
 package services
 
-import "md2s/utils/slide"
+import (
+	"md2s/dto"
+	"md2s/utils/slide"
+)
 
-func GetSlide(content []byte) (marp string, err error) {
-	marp, err = slide.SlideConverter(content)
+func GetSlide(input dto.RequestBody) (marp string, err error) {
+	marp, err = slide.SlideConverter(input)
 	return marp, err
 }

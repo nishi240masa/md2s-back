@@ -9,13 +9,12 @@ RUN apk update && apk add git
 # アプリケーションコードをコンテナ内にコピー
 COPY ./src/ ./
 
-
 # モジュールをインストール
 RUN go mod download
 
 # Airをインストール (公式スクリプトを使用)
 RUN go install github.com/air-verse/air@latest
-# デフォルトでポート 4000 を使用
+# デフォルトでポート 8080 を使用
 ENV PORT=8080
 
 # コンテナがリッスンするポートを指定

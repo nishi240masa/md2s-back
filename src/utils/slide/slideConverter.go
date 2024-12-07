@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"md2s/dto"
 	"os"
 	"slices"
 	"strconv"
@@ -317,7 +318,12 @@ func MD2S(content []byte) (marpContent string, err error) {
 	return marpContent, nil
 }
 
-func SlideConverter(content []byte) (marp string, err error) {
+func SlideConverter(input dto.RequestBody) (marp string, err error) {
+
+
+	content := []byte(input.Md)
+
+
 	decoded := DeleteEscape(content)
 
 	// 文字列変換の例（全て大文字に変換）

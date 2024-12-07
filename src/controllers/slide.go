@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"md2s/dto"
 	"md2s/services"
 	"net/http"
 
@@ -8,18 +9,16 @@ import (
 )
 
 func GetSlide(c *gin.Context) {
-	var requestBody struct {
-		Input string `json:"md"` // リクエストボディのJSONフィールド
-	}
 
-	// JSONのバインド
-	err := c.ShouldBindJSON(&requestBody)
+	var input  dto.RequestBody
+
+	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request"})
 		return
 	}
 
-	slide, err := services.GetSlide([]byte(requestBody.Input))
+	slide, err := services.GetSlide(input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
