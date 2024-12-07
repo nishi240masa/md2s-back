@@ -7,6 +7,7 @@ import (
 
 
 func GetArticles(quary dto.GetArticlesData) ([]models.Article, error) {
+	// 記事情報を取得
 	var articles []models.Article
 
 	result := db.Limit(quary.Limit).Offset(quary.Offset).Find(&articles)
@@ -14,7 +15,7 @@ func GetArticles(quary dto.GetArticlesData) ([]models.Article, error) {
 	if result.Error != nil {
 		return nil, result.Error
 	}
-
+	
 	return articles, nil
 
 }

@@ -9,7 +9,32 @@ import (
 
 func GetArticles( quary dto.GetArticlesData) ([]models.Article, error) {
 
-	return  repositorys.GetArticles(quary)
+	
+
+	articles, err := repositorys.GetArticles(quary)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, article := range articles {
+		// 記事IDからタグIDを取得
+		tags, err := repositorys.GetArticleTagByArticleID(article.ID)
+		if err != nil {
+			return nil, err
+		}
+		var articleTags []models.Tag
+		// タグIDからタグ情報を取得
+		for _, tagRelation := range tags {
+			tag, err := repositorys.GetTag(tagRelation.TagId)
+			if err != nil {
+				return nil, err
+			}
+			articleTags = append(articleTags, *tag)
+		}
+		articles[i].Tags = articleTags
+	}
+
+	return articles, nil
 }
 
 func GetArticle(id int) (*models.Article, error) {

@@ -14,6 +14,7 @@ func GetTags() ([]models.Tag, error) {
 	return tags, nil
 }
 
+// GetTag は指定したIDのタグを取得する
 func GetTag(id int) (*models.Tag, error) {
 	var tag models.Tag
 	result := db.Where("id = ?", id).First(&tag)

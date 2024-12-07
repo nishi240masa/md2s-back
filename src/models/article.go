@@ -44,7 +44,6 @@ type Article struct {
 
 }
 
-
 type CreateArticle struct {
     ID          int       `gorm:"primary_key" json:"id"`
     UserId      UUID    `db:"user_id"`
