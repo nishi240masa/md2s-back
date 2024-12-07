@@ -41,6 +41,7 @@ func GetArticles( quary dto.GetArticlesData) ([]models.Article, error) {
 	return articles, nil
 }
 
+// 記事IDから記事情報を取得
 func GetArticle(id int) (*models.Article, error) {
 	article,err := repositorys.GetArticle(id)
 
@@ -68,6 +69,7 @@ func GetArticle(id int) (*models.Article, error) {
 	return article, nil
 }
 
+// ユーザーIDから記事情報を取得
 func GetArticlesByUserId(user_id models.UUID) ([]models.Article, error) {
 	
 	articles, err := repositorys.GetArticlesByUserId(user_id)
@@ -75,6 +77,27 @@ func GetArticlesByUserId(user_id models.UUID) ([]models.Article, error) {
 		return nil, err
 	}
 
+
+		// 記事IDからタグIDを取得
+		for i, article := range articles {
+			tags, err := repositorys.GetArticleTagByArticleID(article.ID)
+			if err != nil {
+				return nil, err
+			}
+		
+		
+			var articleTags []models.Tag
+			// タグIDからタグ情報を取得
+			for _, tagRelation := range tags {
+				tag, err := repositorys.GetTag(tagRelation.TagId)
+				if err != nil {
+					return nil, err
+				}
+				articleTags = append(articleTags, *tag)
+			}
+			article.Tags = articleTags
+			articles[i] = article
+			}
 	return articles, nil
 }
 

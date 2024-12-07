@@ -31,7 +31,10 @@ func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
 
 func GetArticle(id int) (*models.Article, error) {
 	var article models.Article
-	result := db.Where("id = ?", id).First(&article)
+	result := db.
+	Joins("JOIN users ON users.id = articles.user_id").
+	Select("articles.*, users.icon_url, users.name").
+	Where("articles.id = ?", id).First(&article)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -39,7 +42,11 @@ func GetArticle(id int) (*models.Article, error) {
 }
 func GetArticlesByUserId(user_id models.UUID) ([]models.Article, error) {
 	var articles []models.Article
-	result := db.Where("user_id = ?", user_id).Find(&articles)
+	result := db.
+	Joins("JOIN users ON users.id = articles.user_id").
+	Select("articles.*, users.icon_url, users.name").
+	Where("user_id = ?", user_id).
+	Find(&articles)
 	if result.Error != nil {
 		return nil, result.Error
 	}
