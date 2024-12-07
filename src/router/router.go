@@ -16,18 +16,15 @@ func Init() {
 		port = "8080" // デフォルトのポート
 	}
 
-
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"}, // ここで特定のオリジンを許可することもできます（例: []string{"http://localhost:3000"})
+		AllowOrigins:     []string{"*"},                                       // ここで特定のオリジンを許可することもできます（例: []string{"http://localhost:3000"})
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}, // 許可するHTTPメソッド
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"}, // 許可するヘッダー
-		AllowCredentials: true, // クレデンシャルを許可するかどうか
-		MaxAge:           12 * time.Hour, // キャッシュの最大時間
+		AllowCredentials: true,                                                // クレデンシャルを許可するかどうか
+		MaxAge:           12 * time.Hour,                                      // キャッシュの最大時間
 	}))
-
-
 
 	r.GET("/", func(c *gin.Context) {
 
@@ -44,7 +41,6 @@ func Init() {
 
 	})
 
-
 	// ユーザー
 	users := r.Group("/users")
 	users.GET("/:id", controllers.GetUsers)
@@ -55,7 +51,6 @@ func Init() {
 	// 画像
 	imgs := r.Group("/imgs")
 	imgs.POST("/imgs", controllers.UploadImg)
-
 
 	// Qiita
 	qiita := r.Group("/qiita")
@@ -85,6 +80,9 @@ func Init() {
 	likes.POST("/", controllers.CreateLike)
 	likes.DELETE("/:id", controllers.DeleteLike)
 
+	// slide
+	slide := r.Group("/slide")
+	slide.GET("", controllers.GetSlide)
 
 	// サーバーを指定されたポートで起動
 	if err := r.Run(fmt.Sprintf(":%s", port)); err != nil {
