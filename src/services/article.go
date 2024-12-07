@@ -46,6 +46,16 @@ func GetArticle(id int) (*models.Article, error) {
 	return article, nil
 }
 
+func GetArticlesByUserId(user_id models.UUID) ([]models.Article, error) {
+	
+	articles, err := repositorys.GetArticlesByUserId(user_id)
+	if err != nil {
+		return nil, err
+	}
+
+	return articles, nil
+}
+
 func CreateArticle(input dto.CreateArticleData,googleId string) error {
 
 	// ユーザー情報を取得

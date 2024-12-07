@@ -40,6 +40,14 @@ func GetArticle(id int) (*models.Article, error) {
 	}
 	return &article, nil
 }
+func GetArticlesByUserId(user_id models.UUID) ([]models.Article, error) {
+	var articles []models.Article
+	result := db.Where("user_id = ?", user_id).Find(&articles)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return articles, nil
+}
 
 func CreateArticle(newArticle *models.CreateArticle) (int, error) {
 	

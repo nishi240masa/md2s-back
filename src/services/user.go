@@ -12,13 +12,47 @@ func GetUsers( sortOptions models.UserSortOptions) ([]models.User, error) {
 	return repositorys.GetUsers( sortOptions)
 }
 
-func GetUserByJWT( jwtToken string) (*models.User, error) {
+func GetUserByJWT( jwtToken string) (*models.GetUser, error) {
 	claims, err := VerifyGoogleToken(jwtToken)
 	if err != nil {
 		return nil, err
 	}
 
-	return repositorys.GetUserByGoogleID( claims.Sub) // Google IDとしてEmailを利用
+	res, err :=	repositorys.GetUserByGoogleID( claims.Sub)
+	if err != nil {
+		return nil, err
+	}
+
+	var resUser models.GetUser
+	if res.QiitaId != "" {
+		resUser.Qiita_link = true
+	}
+
+	// userIdからlikesを取得
+	likes, err := repositorys.GetLikes(res.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, like := range likes {
+		resUser.Total_get_like_count += like.LikeCount
+	}
+
+	// userIdからarticlesを取得
+	articles, err := repositorys.GetArticlesByUserId(res.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resUser.Total_posts_articles = len(articles)
+
+	resUser.ID = res.ID
+	resUser.Name = res.Name
+	resUser.IconURL = res.IconURL
+
+	return &resUser, nil
 }
 
 func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error) {

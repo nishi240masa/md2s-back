@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"md2s/dto"
+	"md2s/models"
 	"md2s/services"
 	"net/http"
 	"strconv"
@@ -52,6 +53,29 @@ func GetArticle(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, article)
+}
+
+func GetArticlesByUserId(c *gin.Context) {
+	
+
+	user_id := c.Param("user_id")
+
+	// models.UUID型に変換
+	uid, err := models.StringToUUID(user_id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+
+	articles, err := services.GetArticlesByUserId(uid)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, articles)
 }
 
 func CreateArticle(c *gin.Context) {
