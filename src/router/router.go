@@ -3,6 +3,7 @@ package router
 import (
 	"fmt"
 	"md2s/controllers"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -10,6 +11,12 @@ import (
 )
 
 func Init() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4000" // デフォルトのポート
+	}
+
+
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -79,6 +86,8 @@ func Init() {
 	likes.DELETE("/:id", controllers.DeleteLike)
 
 
-	// 開発は8080番ポートで本番はprocess.env.PORT
-	r.Run("process.env.PORT:8080")
+	// サーバーを指定されたポートで起動
+	if err := r.Run(fmt.Sprintf(":%s", port)); err != nil {
+		fmt.Printf("Failed to start server: %s\n", err)
+	}
 }

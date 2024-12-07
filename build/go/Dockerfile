@@ -15,8 +15,11 @@ RUN go mod download
 
 # Airをインストール (公式スクリプトを使用)
 RUN go install github.com/air-verse/air@latest
+# デフォルトでポート 4000 を使用
+ENV PORT=8080
 
-ENV PORT 8080
+# コンテナがリッスンするポートを指定
+EXPOSE 8080
 
 
 # Air設定ファイルに従ってアプリを起動
