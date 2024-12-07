@@ -5,7 +5,7 @@ import "time"
 type Article struct {
     ID          int       `gorm:"primary_key" json:"id"`
     UserId      UUID    `db:"user_id"`
-	UserName  string    `db:"name"`
+	Name  string    `db:"name"`
 	IconURL string    `db:"icon_url"`
     Title       string    `db:"title"`
     MainMD      string    `db:"main_md"`

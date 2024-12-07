@@ -19,6 +19,7 @@ func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
 	Select("articles.*, users.icon_url, users.name,tags.*").
     Limit(query.Limit).
     Offset(query.Offset).
+    Preload("Tags"). // タグをプリロード
     Find(&articles)
 	
 
@@ -53,11 +54,13 @@ func CreateArticle(newArticle *models.CreateArticle) (int, error) {
 func SearchArticles(input dto.SearchArticlesData) ([]models.Article, error) {
 	var articles []models.Article
 	result := db.
+    Table("articles").
     Joins("JOIN articleTagRelations ON articleTagRelations.article_id = articles.id").
     Joins("JOIN tags ON tags.id = articleTagRelations.tag_id").
-	Joins("JOIN users ON users.id = articles.user_id").
-	Select("articles.*, users.icon, users.name").
+    Joins("JOIN users ON users.id = articles.user_id").
+	Select("articles.*, users.icon_url, users.name, tags.*").
     Where("articles.title LIKE ? OR tags.word LIKE ?", "%"+input.Keyword+"%", "%"+input.Keyword+"%").
+    Preload("Tags"). // タグをプリロード
     Find(&articles)
 
 
