@@ -11,10 +11,18 @@ import (
 
 func GetArticles(c *gin.Context) {
 
-	limit,_ := strconv.Atoi(c.Query("limit"))
-	offset,_ := strconv.Atoi(c.Query("offset"))
+	limit,err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
 
+		limit = 10
+		
+	}
+	offset,err := strconv.Atoi(c.Query("offset"))
+	if err != nil {
 
+		offset = 0
+
+	}
 
 	input := dto.GetArticlesData{
 		Limit: limit,

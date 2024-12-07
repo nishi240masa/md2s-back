@@ -38,7 +38,7 @@ EXECUTE FUNCTION update_updated_at();
 
 
 -- 記事の「いいね」テーブル
-CREATE TABLE IF NOT EXISTS articleLike (
+CREATE TABLE IF NOT EXISTS articleLikes (
     id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     article_id INT NOT NULL REFERENCES articles(id) ON DELETE CASCADE

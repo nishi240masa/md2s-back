@@ -70,6 +70,14 @@ func Init() {
 	tags.PUT("/:id", controllers.UpdateTag)
 	tags.DELETE("/:id", controllers.DeleteTag)
 
+	// like
+	likes := r.Group("/likes")
+	likes.GET("", controllers.GetLikes)
+	likes.GET("/:id", controllers.GetLikesByArticleId)
 
-	r.Run(":8080")
+	likes.POST("/", controllers.CreateLike)
+	likes.DELETE("/:id", controllers.DeleteLike)
+
+
+	r.Run()
 }
