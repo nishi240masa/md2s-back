@@ -79,5 +79,6 @@ func Init() {
 	likes.DELETE("/:id", controllers.DeleteLike)
 
 
-	r.Run()
+	// 開発は8080番ポートで本番はprocess.env.PORT
+	r.Run("process.env.PORT:8080")
 }
