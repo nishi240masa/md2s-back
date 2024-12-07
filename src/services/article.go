@@ -38,7 +38,30 @@ func GetArticles( quary dto.GetArticlesData) ([]models.Article, error) {
 }
 
 func GetArticle(id int) (*models.Article, error) {
-	return repositorys.GetArticle(id)
+	article,err := repositorys.GetArticle(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// 記事IDからタグIDを取得
+	tags, err := repositorys.GetArticleTagByArticleID(article.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	var articleTags []models.Tag
+	// タグIDからタグ情報を取得
+	for _, tagRelation := range tags {
+		tag, err := repositorys.GetTag(tagRelation.TagId)
+		if err != nil {
+			return nil, err
+		}
+		articleTags = append(articleTags, *tag)
+	}
+	article.Tags = articleTags
+
+	return article, nil
 }
 
 func CreateArticle(input dto.CreateArticleData,googleId string) error {
