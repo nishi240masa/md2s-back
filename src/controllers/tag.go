@@ -31,6 +31,7 @@ func GetTag(c *gin.Context) {
 
 func CreateTag(c *gin.Context) {
 	var input []dto.CreateTagData
+
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -42,6 +43,7 @@ func CreateTag(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": tag.Error()})
 		return
 	}
+	
 
 	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }

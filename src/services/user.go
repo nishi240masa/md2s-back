@@ -43,6 +43,8 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 		return nil, errors.New("user already exists")
 	} 
 
+	
+
     newUser := &models.User{
         Name:     input.Name,
         IconURL:  input.IconURL,

@@ -15,11 +15,17 @@ func GetTag(id int) (*models.Tag, error) {
 }
 
 func CreateTag(input []dto.CreateTagData) error {
-
 	var newTag models.Tag
 	for _, tag := range input {
-		newTag.Word = tag.Word
-		repositorys.CreateTag(&newTag)
+
+		newTag = models.Tag{
+			Word: tag.Word,
+		}
+
+		err := repositorys.CreateTag(&newTag)
+		if err != nil {
+		return err
+		}
 	}
 
 	return nil
