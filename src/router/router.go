@@ -11,9 +11,10 @@ import (
 )
 
 func Init() {
+	// 環境変数 PORT を取得
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // デフォルトのポート
+		port = "8080" // デフォルトポート
 	}
 
 	r := gin.Default()
@@ -28,16 +29,9 @@ func Init() {
 
 	r.GET("/", func(c *gin.Context) {
 
-		// クエリパラメータを取得
-		code := c.Query("code")
-
-		fmt.Println(code)
-
-		// リダイレクト先のURLを生成
-		redirectURL := "https://md2s-test-aa.vercel.app/"
-
-		// リダイレクト
-		c.Redirect(302, redirectURL)
+		c.JSON(200, gin.H{
+			"message": "connection success",
+		})
 
 	})
 
@@ -84,7 +78,7 @@ func Init() {
 	slide := r.Group("/slide")
 	slide.GET("", controllers.GetSlide)
 
-	// サーバーを指定されたポートで起動
+	// 指定されたポートでサーバーを開始
 	if err := r.Run(fmt.Sprintf(":%s", port)); err != nil {
 		fmt.Printf("Failed to start server: %s\n", err)
 	}
