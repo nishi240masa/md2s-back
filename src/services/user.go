@@ -78,7 +78,7 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 
 	var user *models.User
 	user, err = repositorys.GetUserByGoogleID(input.GoogleId)
-	if err == nil {
+	if err != nil {
 
 		if user.QiitaId == user.GoogleId {
 			user.Qiita_link = false
