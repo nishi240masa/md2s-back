@@ -79,7 +79,7 @@ func Init() {
 
 	// slide
 	slide := r.Group("/slide")
-	slide.GET("", controllers.GetSlide)
+	slide.POST("", controllers.GetSlide)
 
 	// 指定されたポートでサーバーを開始
 	if err := r.Run(fmt.Sprintf(":%s", port)); err != nil {

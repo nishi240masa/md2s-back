@@ -6,7 +6,6 @@ import (
 	"md2s/models"
 	"md2s/repositorys"
 	"md2s/utils/qitta"
-	"net/http"
 )
 
 func AlignmentQiita(jwtToken string, input dto.AlignmentQiita) (*models.User, error) {
@@ -46,7 +45,7 @@ func AlignmentQiita(jwtToken string, input dto.AlignmentQiita) (*models.User, er
 
 }
 
-func GetQiitaArticles(jwtToken string) (*http.Request, error) {
+func GetQiitaArticles(jwtToken string) ([]models.QittaList, error) {
 	// JWTトークンからユーザー情報を取得
 	claims, err := VerifyGoogleToken(jwtToken)
 	if err != nil {
@@ -70,10 +69,10 @@ func GetQiitaArticles(jwtToken string) (*http.Request, error) {
 	token := user.QiitaId
 
 	// Qiitaの記事を取得
-	articles, err := qitta.GetQiitaArticles(token)
+	qiitaList, err := qitta.GetQiitaArticles(token)
 	if err != nil {
 		return nil, err
 	}
 
-	return articles, nil
+	return qiitaList, nil
 }
