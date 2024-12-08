@@ -8,8 +8,8 @@ type Article struct {
 	Name  string    `db:"name" gorm:"column:name" json:"name"`
 	IconURL string    `db:"icon_url" json:"icon_url"`
     Title       string    `db:"title" gorm:"column:title" json:"title"`
-    MainMD      string    `db:"main_md" gorm:"column:main_md" json:"main_md"`
-    SlideMD     *string   `db:"slide_md" gorm:"column:slide_md" json:"slide_md"`
+    MainMD      string    `db:"main_md" gorm:"column:main_md" json:"main_MD"`
+    SlideMD     *string   `db:"slide_md" gorm:"column:slide_md" json:"slide_MD"`
     CreatedAt   time.Time `db:"created_at" gorm:"created_at" json:"created_at"`
     UpdatedAt   time.Time `db:"updated_at" gorm:"updated_at" json:"updated_at"`
     LikeCount   int       `db:"like_count" gorm:"column:like_count" json:"like_count"`
