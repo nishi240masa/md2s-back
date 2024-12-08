@@ -1,7 +1,6 @@
 package slide
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"fmt"
@@ -68,12 +67,6 @@ func extractTextFromQiitaBlock(blockText string) string {
 var images []string    // 画像のURL分離用
 var images_index []int // 分離した画像があった配列番号
 func parseMarkdown(content []byte) ([]*Slide, error) {
-
-	// qiitaのメタデータを削除
-	separator := []byte{45, 45, 45}
-	tmp := bytes.Split(content, separator)
-	content = append(separator, tmp[2]...)
-	// fmt.Println(string(content))
 
 	// Goldmarkの初期化
 	mdParser := goldmark.New(
@@ -269,12 +262,15 @@ func AnalyzeContentWithGemini(slides []*Slide) ([]*Slide, error) {
 }
 
 // marpタグを冒頭に追加、ページの分かれたスライドを連結
-func ConvertToMarp(slides []*Slide) string {
+func ConvertToMarp(slides []*Slide, title []byte) string {
 	var marpBuilder strings.Builder
 	marpBuilder.WriteString("---\nmarp: true\n") // Marpタグ
+	marpBuilder.WriteString("---\n# ")
+	marpBuilder.WriteString(string(title))
+	marpBuilder.WriteString("<style scoped>section{font-size:50px;}</style>")
 
 	for _, slide := range slides {
-		marpBuilder.WriteString("---\n")
+		marpBuilder.WriteString("\n---\n")
 		marpBuilder.WriteString(fmt.Sprintf("# %s\n\n", slide.Title))
 		marpBuilder.WriteString(fmt.Sprintf("%s\n", slide.Content))
 	}
@@ -297,7 +293,7 @@ func DeleteEscape(content []byte) (result []byte) {
 	return result
 }
 
-func MD2S(content []byte) (marpContent string, err error) {
+func MD2S(content []byte, title []byte) (marpContent string, err error) {
 	// マークダウンをページごとに変換
 	slides, err := parseMarkdown(content)
 	if err != nil {
@@ -311,7 +307,7 @@ func MD2S(content []byte) (marpContent string, err error) {
 	}
 
 	// 連結＆marpタグ追加
-	marpContent = ConvertToMarp(analyzedSlides)
+	marpContent = ConvertToMarp(analyzedSlides, title)
 
 	return marpContent, nil
 }
@@ -319,11 +315,12 @@ func MD2S(content []byte) (marpContent string, err error) {
 func SlideConverter(input dto.RequestBody) (marp string, err error) {
 
 	content := []byte(input.Md)
+	title := []byte(input.Title)
 
 	decoded := DeleteEscape(content)
 
 	// 文字列変換の例（全て大文字に変換）
-	marp, err = MD2S(decoded)
+	marp, err = MD2S(decoded, title)
 
 	//base64に変換
 	marp = base64.StdEncoding.EncodeToString([]byte(marp))
