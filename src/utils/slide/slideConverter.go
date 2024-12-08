@@ -267,7 +267,7 @@ func ConvertToMarp(slides []*Slide, title []byte) string {
 	marpBuilder.WriteString("---\nmarp: true\n") // Marpタグ
 	marpBuilder.WriteString("---\n# ")
 	marpBuilder.WriteString(string(title))
-	marpBuilder.WriteString("<style scoped>section{font-size:50px;}</style>")
+	marpBuilder.WriteString("\n<style scoped>section{font-size:50px;}</style>")
 
 	for _, slide := range slides {
 		marpBuilder.WriteString("\n---\n")
