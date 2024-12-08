@@ -8,7 +8,6 @@ import (
 	"md2s/dto"
 	"os"
 	"slices"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -278,13 +277,13 @@ func ConvertToMarp(slides []*Slide, title []byte) string {
 }
 
 func DeleteEscape(content []byte) (result []byte) {
-	strc := string(content)
+	// strc := string(content)
 
-	unescaped, err := strconv.Unquote(strc)
-	if err != nil {
-		fmt.Println("[ERROR] parse failed")
-	}
-	result = []byte(unescaped)
+	// unescaped, err := strconv.Unquote(strc)
+	// if err != nil {
+	// 	fmt.Println("[ERROR] parse failed")
+	// }
+	result = []byte(content)
 	return result
 }
 
