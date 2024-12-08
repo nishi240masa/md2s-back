@@ -88,11 +88,11 @@ func parseMarkdown(content []byte) ([]*Slide, error) {
 	var currentSlide *Slide
 
 	// ASTを歩いてスライドを構築
-	var count = -1
-	var afterList = false
+	var count = 0
+	var afterOption = false
 	err := ast.Walk(doc, func(n ast.Node, entering bool) (ast.WalkStatus, error) {
 		if entering {
-			// fmt.Println(n.Kind())
+			fmt.Println(n.Kind())
 			switch n.Kind() {
 			case ast.KindHeading:
 				heading := n.(*ast.Heading)
@@ -107,23 +107,24 @@ func parseMarkdown(content []byte) ([]*Slide, error) {
 					}
 					count++
 				}
-			case ast.KindParagraph, ast.KindTextBlock, ast.KindText:
+				afterOption = true
+			case ast.KindTextBlock, ast.KindText:
 				// すべてのテキストベースのノードを検査
 				var textContent string
-				if afterList {
-					afterList = false
+				if afterOption {
+					afterOption = false
 				} else {
 					textContent = extractText(n, content)
-				}
-				if isQiitaBlock(textContent) {
-					// Qiita独自のマークダウンブロックからテキストを抽出
-					text := extractTextFromQiitaBlock(textContent)
-					if currentSlide != nil {
-						currentSlide.Content += text + "\n"
+					if isQiitaBlock(textContent) {
+						// Qiita独自のマークダウンブロックからテキストを抽出
+						text := extractTextFromQiitaBlock(textContent)
+						if currentSlide != nil {
+							currentSlide.Content += text + "\n"
+						}
+						return ast.WalkSkipChildren, nil
+					} else if currentSlide != nil {
+						currentSlide.Content += textContent + "\n"
 					}
-					return ast.WalkSkipChildren, nil
-				} else if currentSlide != nil {
-					currentSlide.Content += textContent + "\n"
 				}
 			case ast.KindRawHTML:
 				if currentSlide != nil {
@@ -139,7 +140,7 @@ func parseMarkdown(content []byte) ([]*Slide, error) {
 				if currentSlide != nil {
 					// listItem := n.(*ast.ListItem)
 					// currentSlide.Content += "- " + extractText(listItem, content) + "\n"
-					afterList = true
+					afterOption = true
 				}
 			case ast.KindCodeBlock:
 				if currentSlide != nil {
@@ -162,6 +163,7 @@ func parseMarkdown(content []byte) ([]*Slide, error) {
 					imageSrc := string(image.Destination) // 画像のURL
 					images = append(images, fmt.Sprintf("\n---\n![bg fit](%s)\n", imageSrc))
 					images_index = append(images_index, count)
+					afterOption = true
 				}
 			case ast.KindLink:
 				if currentSlide != nil {
@@ -169,12 +171,14 @@ func parseMarkdown(content []byte) ([]*Slide, error) {
 					linkDest := string(link.Destination) // リンク先
 					linkText := extractText(n, content)  // リンクテキスト
 					currentSlide.Content += fmt.Sprintf("\n[%s](%s)\n", linkText, linkDest)
+					afterOption = true
 				}
 			case ast.KindAutoLink:
 				if currentSlide != nil {
 					link := n.(*ast.AutoLink)
 					linkDest := string(link.URL(content)) // リンク先
 					currentSlide.Content += fmt.Sprintf("\n[リンク](%s)\n", linkDest)
+					afterOption = true
 				}
 			}
 		}
@@ -233,7 +237,7 @@ func AnalyzeContentWithGemini(slides []*Slide) ([]*Slide, error) {
 			go func() {
 				defer wg.Done()
 				// プロンプト設定するとこ
-				prompt := fmt.Sprintf("コンテンツを5行程度の箇条書きでスライド口調に要約。コンテンツがない場合は　　を出力。それ以外は要約のみ出力 \nコンテンツ\n%s", slide.Content)
+				prompt := fmt.Sprintf("コンテンツを箇条書きプレゼン調に要約。コンテンツがない場合は空白を2個出力。それ以外は要約のみ出力 \n\n以下コンテンツ\n\n%s", slide.Content)
 				// Gemini API を使用してコンテンツを最適化
 				fmt.Println("[send] index:", i)
 				resp, err := model.GenerateContent(ctx, genai.Text(prompt))
