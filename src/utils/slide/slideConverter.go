@@ -2,7 +2,6 @@ package slide
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
 	"log"
 	"math"
@@ -280,12 +279,8 @@ func ConvertToMarp(slides []*Slide, title []byte) string {
 
 func DeleteEscape(content []byte) (result []byte) {
 	strc := string(content)
-	decryed, err := base64.StdEncoding.DecodeString(strc)
-	if err != nil {
-		fmt.Println("failed")
-	}
 
-	unescaped, err := strconv.Unquote(string(decryed))
+	unescaped, err := strconv.Unquote(strc)
 	if err != nil {
 		fmt.Println("[ERROR] parse failed")
 	}
@@ -321,9 +316,6 @@ func SlideConverter(input dto.RequestBody) (marp string, err error) {
 
 	// 文字列変換の例（全て大文字に変換）
 	marp, err = MD2S(decoded, title)
-
-	//base64に変換
-	marp = base64.StdEncoding.EncodeToString([]byte(marp))
 
 	return marp, err
 }
