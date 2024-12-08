@@ -1,5 +1,6 @@
 package dto
 
 type RequestBody struct {
-	Md string `json:"md"` // リクエストボディのJSONフィールド
+	Md    string `json:"md"`
+	Title string `json:"title"`
 }
