@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"md2s/dto"
 	"md2s/services"
 	"net/http"
@@ -47,6 +48,8 @@ func GetQiitaArticles(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	fmt.Println(articles)
 
 	c.JSON(http.StatusOK, articles)
 
