@@ -314,6 +314,11 @@ func SlideConverter(input dto.RequestBody) (marp string, err error) {
 	title := []byte(input.Title)
 	style := input.Style
 
+	// インデックス外参照対策
+	if style > 5 {
+		style = 0
+	}
+
 	decoded := DeleteEscape(content)
 
 	// 文字列変換の例（全て大文字に変換）
