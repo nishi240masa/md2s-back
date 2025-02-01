@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"md2s/dto"
+	"md2s/utils/slide/slidethemes"
 	"os"
 	"slices"
 	"strings"
@@ -260,12 +261,13 @@ func AnalyzeContentWithGemini(slides []*Slide) ([]*Slide, error) {
 }
 
 // marpタグを冒頭に追加、ページの分かれたスライドを連結
-func ConvertToMarp(slides []*Slide, title []byte) string {
+func ConvertToMarp(slides []*Slide, title []byte, style int) string {
 	var marpBuilder strings.Builder
 	marpBuilder.WriteString("---\nmarp: true\n") // Marpタグ
+	marpBuilder.WriteString(slidethemes.ThemeList[style])
 	marpBuilder.WriteString("---\n# ")
 	marpBuilder.WriteString(string(title))
-	marpBuilder.WriteString("\n<style scoped>section{font-size:50px;}</style>")
+	marpBuilder.WriteString("\n<style scoped>section{font-size:50px;text-align:center}</style>")
 
 	for _, slide := range slides {
 		marpBuilder.WriteString("\n---\n")
@@ -287,7 +289,7 @@ func DeleteEscape(content []byte) (result []byte) {
 	return result
 }
 
-func MD2S(content []byte, title []byte) (marpContent string, err error) {
+func MD2S(content []byte, title []byte, style int) (marpContent string, err error) {
 	// マークダウンをページごとに変換
 	slides, err := parseMarkdown(content)
 	if err != nil {
@@ -301,7 +303,7 @@ func MD2S(content []byte, title []byte) (marpContent string, err error) {
 	}
 
 	// 連結＆marpタグ追加
-	marpContent = ConvertToMarp(analyzedSlides, title)
+	marpContent = ConvertToMarp(analyzedSlides, title, style)
 
 	return marpContent, nil
 }
@@ -310,11 +312,12 @@ func SlideConverter(input dto.RequestBody) (marp string, err error) {
 
 	content := []byte(input.Md)
 	title := []byte(input.Title)
+	style := input.Style
 
 	decoded := DeleteEscape(content)
 
 	// 文字列変換の例（全て大文字に変換）
-	marp, err = MD2S(decoded, title)
+	marp, err = MD2S(decoded, title, style)
 
 	return marp, err
 }
