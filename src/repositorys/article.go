@@ -13,6 +13,28 @@ func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
 
 	// 記事のuser_idからユーザーiconとnameも取得
 	// publicの記事のみ取得
+	// offsetが0の場合はランダムに取得
+
+	if query.Offset == 0 {
+		
+		result := db.
+		Joins("JOIN users ON users.id = articles.user_id").
+		Where("articles.public = ?", true).
+		Select("articles.*, users.icon_url, users.name").
+		Order("RAND()").
+		Limit(query.Limit).
+		Find(&articles)
+
+		// ０件の場合
+		if result.Error  == nil && len(articles) == 0 {
+			return articles, nil
+		}
+
+		if result.Error != nil {
+			return nil, result.Error
+		}
+		return articles, nil
+	}
 	result := db.
     Joins("JOIN users ON users.id = articles.user_id").
 	Where("articles.public = ?", true).
