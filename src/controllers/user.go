@@ -79,6 +79,11 @@ func CreateUser(c *gin.Context) {
 
 	user, err := services.CreateUser(jwtToken, input)
 	if err != nil {
+		if err.Error() == "user already exists" {
+			c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+			return
+			
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
