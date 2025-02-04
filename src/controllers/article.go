@@ -188,3 +188,34 @@ func UpdateArticle(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }
+
+// delete
+func DeleteArticle(c *gin.Context) {
+	
+	id,_ := strconv.Atoi(c.Param("id"))
+
+	// 本人確認
+	jwtToken, err := extractJWTFromHeader(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	claims, err := services.VerifyGoogleToken(jwtToken)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	googleId := claims.Sub
+
+	// 記事削除
+	err = services.DeleteArticle(id, googleId)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
+}

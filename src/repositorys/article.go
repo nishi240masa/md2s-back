@@ -67,6 +67,8 @@ func GetArticlesByUserId(user_id models.UUID) ([]models.Article, error) {
 }
 
 func CreateArticle(newArticle *models.Articles) (int, error) {
+
+
 	
 	result := db.Create(newArticle)
 	if result.Error != nil {
@@ -93,8 +95,16 @@ func SearchArticles(input dto.SearchArticlesData) ([]models.Article, error) {
 	return articles, nil
 }
 
-func UpdateArticle(article *models.CreateArticle) error {
+func UpdateArticle(article *models.Articles) error {
 	result := db.Save(article)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func DeleteArticle(id int) error {
+	result := db.Where("id = ?", id).Delete(&models.Article{})
 	if result.Error != nil {
 		return result.Error
 	}

@@ -202,7 +202,7 @@ func UpdateArticle(id int, input dto.CreateArticleData,googleId string ) error {
 	}
 
 	// 記事の更新
-	newArticle := models.CreateArticle{
+	newArticle := models.Articles{
 		ID: id,
 		UserId: user.ID,
 		Title: input.Title,
@@ -214,22 +214,20 @@ func UpdateArticle(id int, input dto.CreateArticleData,googleId string ) error {
 	}
 
 	err = repositorys.UpdateArticle(&newArticle)
-
 	if err != nil {
 		return err
 	}
 
+
+	// タグの更新
 	// タグの削除
 	err = repositorys.DeleteArticleTagByArticleID(id)
-
 	if err != nil {
 		return err
 	}
 
 	// タグの登録
-
 	for _, tag := range input.Tags {
-		
 		article_id := id
 		tag_id := tag.ID
 
@@ -246,6 +244,41 @@ func UpdateArticle(id int, input dto.CreateArticleData,googleId string ) error {
 	return nil
 
 
+}
 
 
+func DeleteArticle(id int,googleId string) error {
+	
+	// ユーザー情報を取得
+	user, err := repositorys.GetUserByGoogleID(googleId)
+	if err != nil {
+		return err
+	}
+
+	// 記事の取得
+	nowArticle, err := GetArticle(id)
+	if err != nil {
+		return err
+	}
+
+	// ユーザー確認
+	if nowArticle.UserId != user.ID {
+		return nil
+	}
+
+	// 記事の削除
+	err = repositorys.DeleteArticle(id)
+
+	if err != nil {
+		return err
+	}
+
+	// タグの削除
+	err = repositorys.DeleteArticleTagByArticleID(id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

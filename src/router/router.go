@@ -61,6 +61,8 @@ func Init() {
 	articles.POST("", controllers.CreateArticle)
 	articles.PUT("/:id", controllers.UpdateArticle)
 
+	articles.DELETE("/:id", controllers.DeleteArticle)
+
 	// タグ
 	tags := r.Group("/tags")
 	tags.GET("", controllers.GetTags)
