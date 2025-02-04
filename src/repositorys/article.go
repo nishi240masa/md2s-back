@@ -88,6 +88,7 @@ func SearchArticles(input dto.SearchArticlesData) ([]models.Article, error) {
     Joins("JOIN tags ON tags.id = articleTagRelations.tag_id").
     Joins("JOIN users ON users.id = articles.user_id").
     Select("DISTINCT articles.*, users.icon_url AS icon_url, users.name AS user_name").
+	Where("articles.public = ?", true).
     Where("articles.title LIKE ? OR tags.word LIKE ?", "%"+input.Keyword+"%", "%"+input.Keyword+"%").
     Find(&articles)
 
