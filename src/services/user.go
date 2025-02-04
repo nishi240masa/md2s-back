@@ -80,8 +80,9 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 	user, err = repositorys.GetUserByGoogleID(input.GoogleId)
 	if err != nil {
 
-		if err.Error() == "record not found" {
+		if user == nil {
 
+			// 新規登録
 			newUser := &models.User{
 				Name:     input.Name,
 				IconURL:  input.IconURL,
@@ -89,7 +90,7 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 				QiitaId:  input.GoogleId,
 				Qiita_link: false,
 			}
-
+			
 			err = repositorys.CreateUser(newUser)
 			if err != nil {
 				return nil, err
@@ -98,6 +99,8 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 			return newUser, nil
 
 		}
+
+		// 既に登録されている場合
 
 		if user.QiitaId == user.GoogleId {
 			user.Qiita_link = false
