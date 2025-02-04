@@ -27,6 +27,9 @@ func DeleteLike(userId models.UUID, articleId int) error {
 
 	// いいねを削除
 	result := db.Where("user_id = ? AND article_id = ?", userId, articleId).Delete(&models.Articlelike{})
+
+	// articlesテーブルのいいね数を更新
+	db.Model(&models.Article{}).Where("id = ?", articleId).Update("like_count", gorm.Expr("like_count - ?", 1))
 	
 	if result.Error != nil {
 		return result.Error
