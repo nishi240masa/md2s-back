@@ -208,6 +208,7 @@ func UpdateArticle(id int, input dto.CreateArticleData,googleId string ) error {
 		Title: input.Title,
 		MainMD: input.MainMD,
 		SlideMD: &input.SlideMD,
+		CreatedAt: nowArticle.CreatedAt,
 		LikeCount: article.LikeCount,
 		Public: input.Public,
 		QiitaArticle: input.QiitaArticle,
