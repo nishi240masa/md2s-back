@@ -76,7 +76,7 @@ func Init() {
 	likes.GET("", controllers.GetLikes)
 	likes.GET("/:id", controllers.GetLikesByArticleId)
 
-	likes.POST("/", controllers.CreateLike)
+	likes.POST("", controllers.CreateLike)
 	likes.DELETE("/:id", controllers.DeleteLike)
 
 	// slide
