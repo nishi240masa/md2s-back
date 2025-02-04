@@ -22,7 +22,7 @@ func Init() {
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},                                       // ここで特定のオリジンを許可することもできます（例: []string{"http://localhost:3000"})
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}, // 許可するHTTPメソッド
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"}, // 許可するヘッダー
+		AllowHeaders:     []string{"*"}, // 許可するヘッダー
 		AllowCredentials: true,                                                // クレデンシャルを許可するかどうか
 		MaxAge:           12 * time.Hour,                                      // キャッシュの最大時間
 	}))
@@ -76,7 +76,7 @@ func Init() {
 	likes.GET("", controllers.GetLikes)
 	likes.GET("/:id", controllers.GetLikesByArticleId)
 
-	likes.POST("/", controllers.CreateLike)
+	likes.POST("", controllers.CreateLike)
 	likes.DELETE("/:id", controllers.DeleteLike)
 
 	// slide
