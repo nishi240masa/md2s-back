@@ -42,11 +42,7 @@ func DeleteLike (c *gin.Context) {
 		return
 	}
 
-	articleId, err := strconv.Atoi(c.Param("articleId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid article ID"})
-		return
-	}
+	articleId, _ := strconv.Atoi(c.Param("articleId"))
 
 	err = services.DeleteLike(jwtToken, articleId)
 
@@ -86,11 +82,7 @@ func GetLikesByArticleId (c *gin.Context) {
 		return
 	}
 
-	articleId, err := strconv.Atoi(c.Param("articleId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid article ID"})
-		return
-	}
+	articleId, _ := strconv.Atoi(c.Param("articleId"))
 
 	like, err := services.GetLikesByArticleId(jwtToken, articleId)
 
