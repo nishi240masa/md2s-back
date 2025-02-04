@@ -58,6 +58,7 @@ func Init() {
 	articles.GET("/search", controllers.SearchArticles)
 	articles.GET("/user/:user_id", controllers.GetArticlesByUserId)
 
+
 	articles.POST("", controllers.CreateArticle)
 	articles.PUT("/:id", controllers.UpdateArticle)
 

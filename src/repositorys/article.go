@@ -12,8 +12,10 @@ func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
 
 
 	// 記事のuser_idからユーザーiconとnameも取得
+	// publicの記事のみ取得
 	result := db.
     Joins("JOIN users ON users.id = articles.user_id").
+	Where("articles.public = ?", true).
 	Select("articles.*, users.icon_url, users.name").
     Limit(query.Limit).
     Offset(query.Offset).
