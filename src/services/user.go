@@ -80,6 +80,25 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 	user, err = repositorys.GetUserByGoogleID(input.GoogleId)
 	if err != nil {
 
+		if err.Error() == "record not found" {
+
+			newUser := &models.User{
+				Name:     input.Name,
+				IconURL:  input.IconURL,
+				GoogleId: input.GoogleId,
+				QiitaId:  input.GoogleId,
+				Qiita_link: false,
+			}
+
+			err = repositorys.CreateUser(newUser)
+			if err != nil {
+				return nil, err
+			}
+
+			return newUser, nil
+
+		}
+
 		if user.QiitaId == user.GoogleId {
 			user.Qiita_link = false
 		} else {
@@ -94,26 +113,8 @@ func CreateUser(jwtToken string, input dto.CreateUserData) (*models.User, error)
 			return nil, err
 		}
 
-
-
 		return nil, errors.New("user already exists")
-	} 
-
-	
-
-
-	newUser := &models.User{
-		Name:     input.Name,
-		IconURL:  input.IconURL,
-		GoogleId: input.GoogleId,
-		QiitaId:  input.GoogleId,
-		Qiita_link: false,
 	}
 
-    err = repositorys.CreateUser(newUser)
-	if err != nil {
-		return nil, err
-	}
-
-	return newUser, nil
+	return nil, errors.New("user already exists")
 }
