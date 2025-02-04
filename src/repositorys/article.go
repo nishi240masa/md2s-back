@@ -21,7 +21,7 @@ func GetArticles(query dto.GetArticlesData) ([]models.Article, error) {
 		Joins("JOIN users ON users.id = articles.user_id").
 		Where("articles.public = ?", true).
 		Select("articles.*, users.icon_url, users.name").
-		Order("RAND()").
+		Order("RANDOM()").
 		Limit(query.Limit).
 		Find(&articles)
 
