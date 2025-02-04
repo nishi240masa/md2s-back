@@ -12,6 +12,9 @@ func CreateLike(newLike *models.Articlelike) error {
 	
 	// いいねを登録
 	result := db.Create(newLike)
+
+	// articlesテーブルのいいね数を更新
+	db.Model(&models.Article{}).Where("id = ?", newLike.ArticleId).Update("like_count", gorm.Expr("like_count + ?", 1))
 	
 	if result.Error != nil {
 		return result.Error
