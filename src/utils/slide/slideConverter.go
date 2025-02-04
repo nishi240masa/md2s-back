@@ -289,6 +289,33 @@ func DeleteEscape(content []byte) (result []byte) {
 	return result
 }
 
+func generateTitle(content []byte) (title []byte) {
+	ctx := context.Background()
+	// Gemini APIクライアントを作成する
+	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Close()
+
+	// Gemini のモデル指定
+	model := client.GenerativeModel("gemini-1.5-flash")
+
+	// プロンプト設定するとこ
+	prompt := fmt.Sprintf("コンテンツをもとに短いタイトルを1つ作ってください。作ったタイトルだけ出力してください。\n\n以下コンテンツ\n\n%s", string(content))
+	resp, err := model.GenerateContent(ctx, genai.Text(prompt))
+	if err != nil {
+		fmt.Println("[ERROR] ", err)
+		return
+	}
+
+	for _, part := range resp.Candidates[0].Content.Parts {
+		title = []byte(fmt.Sprintln(part))
+	}
+
+	return title
+}
+
 func MD2S(content []byte, title []byte, style int) (marpContent string, err error) {
 	// マークダウンをページごとに変換
 	slides, err := parseMarkdown(content)
@@ -313,6 +340,12 @@ func SlideConverter(input dto.RequestBody) (marp string, err error) {
 	content := []byte(input.Md)
 	title := []byte(input.Title)
 	style := input.Style
+
+	// タイトルが空の時AIで生成
+	if string(title) == "" {
+		fmt.Println("Title is empty. Generating title...")
+		title = generateTitle(content)
+	}
 
 	// インデックス外参照対策
 	if style > 5 {
